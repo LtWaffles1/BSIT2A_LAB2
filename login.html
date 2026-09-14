@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>connectly</title>
+<style>
+  :root {
+    --brand: #D91B2B;
+    --brand-dark: #B4131F;
+    --bg: #F0F2F5;
+    --text: #1C1E21;
+    --muted: #606770;
+    --border: #DADDE1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    max-width: 980px;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .brand-col {
+    max-width: 420px;
+  }
+
+  .brand-col h1 {
+    color: var(--brand);
+    font-size: 48px;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+  }
+
+  .brand-col p {
+    font-size: 20px;
+    color: var(--text);
+    line-height: 1.35;
+  }
+
+  .login-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 100%;
+    max-width: 396px;
+  }
+
+  .login-card input[type="text"],
+  .login-card input[type="password"] {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 17px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    outline: none;
+  }
+
+  .login-card input:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 2px rgba(217,27,43,0.15);
+  }
+
+  .login-btn {
+    width: 100%;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    transition: background 0.15s ease;
+  }
+
+  .login-btn:hover { background: var(--brand-dark); }
+
+  .forgot {
+    display: block;
+    text-align: center;
+    color: var(--brand);
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .forgot:hover { text-decoration: underline; }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  .create-account-btn {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    background: #42B72A;
+    color: #fff;
+    border: none;
+    padding: 12px 16px;
+    font-size: 17px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .create-account-btn:hover { background: #36a420; }
+
+  .status {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 14px;
+    min-height: 18px;
+  }
+
+  .status.error { color: var(--brand); }
+  .status.success { color: #2e7d32; }
+
+  @media (max-width: 700px) {
+    .brand-col { text-align: center; }
+    .brand-col h1 { font-size: 36px; }
+    .brand-col p { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="brand-col">
+    <h1>connectly</h1>
+    <p>Connect with friends and the world around you, on connectly.</p>
+  </div>
+
+  <div class="login-card">
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Email or phone number" autocomplete="username" required>
+      <input type="password" id="password" placeholder="Password" autocomplete="current-password" required>
+      <button type="submit" class="login-btn">Log In</button>
+      <a href="forgot-password.html" class="forgot">Forgotten password?</a>
+      <hr>
+      <button type="button" class="create-account-btn" id="createAccountBtn">Create new account</button>
+    </form>
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script>
+  // Demo-only front end. No credentials are sent anywhere; this
+  // just shows how you'd wire up the form to your own auth logic.
+  const form = document.getElementById('loginForm');
+  const status = document.getElementById('status');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!username || !password) {
+      status.textContent = 'Please fill in both fields.';
+      status.className = 'status error';
+      return;
+    }
+
+    // Replace this block with a real call to your own backend/auth API.
+    status.textContent = 'Logging in… (connect this to your backend)';
+    status.className = 'status success';
+  });
+
+  document.getElementById('createAccountBtn').addEventListener('click', function () {
+    status.textContent = 'Hook this button up to your sign-up flow.';
+    status.className = 'status success';
+  });
+</script>
+
+</body>
+</html>
