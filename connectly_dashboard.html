@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Connectly</title>
+<style>
+  :root{
+    --bg:#FAF5F2;
+    --card:#FFFFFF;
+    --brand:#B3241C;
+    --brand-deep:#7C1712;
+    --brand-dark2:#8E211B;
+    --ink:#2B1D19;
+    --muted:#8A746C;
+    --line:#EFE2DC;
+    --tint:#F7E7E2;
+    --green:#2E7D5B;
+    --gold:#C98A1E;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color:var(--ink);
+  }
+  a{text-decoration:none;color:inherit;}
+  button{font-family:inherit;border:none;background:none;cursor:pointer;}
+  img{display:block;}
+
+  /* Top bar */
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    background:var(--brand-deep);
+  }
+  .topbar-inner{
+    max-width:1152px; margin:0 auto;
+    display:flex; align-items:center; gap:12px;
+    padding:8px 16px;
+  }
+  .menu-btn{display:none; color:#fff;}
+  .logo{
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight:800;
+    font-size:24px;
+    letter-spacing:-0.02em;
+    color:#fff;
+  }
+  .search{
+    margin-left:8px;
+    display:none;
+    align-items:center; gap:8px;
+    background:var(--brand-dark2);
+    border-radius:999px;
+    padding:6px 12px;
+    max-width:280px;
+    flex:1;
+  }
+  .search input{
+    background:transparent; border:none; outline:none;
+    color:#fff; font-size:14px; width:100%;
+  }
+  .search input::placeholder{color:#F2CFC9;}
+  .nav-icons{margin-left:auto; display:none; gap:4px;}
+  .nav-icon{
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
+    flex:1; height:44px; width:56px;
+    color:#E8C9C4;
+    border-bottom:3px solid transparent;
+  }
+  .nav-icon.active{color:var(--brand); border-bottom-color:var(--brand);}
+  .right-icons{margin-left:auto; display:flex; align-items:center; gap:8px;}
+  .icon-circle{
+    display:flex; align-items:center; justify-content:center;
+    height:36px; width:36px; border-radius:999px;
+    background:var(--brand-dark2); color:#fff;
+  }
+  .avatar-sm{height:36px; width:36px; border-radius:999px; object-fit:cover;}
+
+  /* Layout */
+  .layout{
+    max-width:1152px; margin:0 auto;
+    display:grid;
+    grid-template-columns:220px 1fr 260px;
+    gap:20px;
+    padding:20px 16px;
+  }
+
+  /* Left sidebar */
+  .profile-row{display:flex; align-items:center; gap:12px; padding:8px; border-radius:8px;}
+  .profile-name{font-size:14.5px; font-weight:600;}
+  .side-links{display:flex; flex-direction:column; gap:4px; margin-top:4px;}
+  .side-link{
+    display:flex; align-items:center; gap:12px;
+    padding:8px; border-radius:8px; cursor:pointer;
+  }
+  .side-link:hover{background:var(--tint);}
+  .side-icon{
+    display:flex; align-items:center; justify-content:center;
+    height:36px; width:36px; border-radius:999px;
+    background:var(--tint); color:var(--brand); flex-shrink:0;
+  }
+  .side-label{font-size:14.5px; font-weight:500;}
+  .side-sub{font-size:12px; color:var(--muted);}
+  .side-section{margin-top:16px; padding-top:12px; border-top:1px solid var(--line);}
+  .side-heading{
+    padding:0 8px; font-size:12px; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.03em; color:var(--muted);
+  }
+  .group-row{
+    display:flex; align-items:center; gap:12px;
+    padding:6px 8px; border-radius:8px; cursor:pointer;
+  }
+  .group-row:hover{background:var(--tint);}
+  .group-thumb{height:32px; width:32px; border-radius:8px; background:var(--tint); flex-shrink:0;}
+  .group-name{font-size:14px;}
+
+  /* Center feed */
+  .feed{display:flex; flex-direction:column; gap:16px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+  }
+  .composer{padding:16px;}
+  .composer-row{display:flex; align-items:center; gap:12px;}
+  .avatar-md{height:40px; width:40px; border-radius:999px; object-fit:cover; flex-shrink:0;}
+  .composer-input{
+    flex:1; background:var(--tint); color:var(--muted);
+    border-radius:999px; padding:10px 16px; font-size:14.5px;
+  }
+  .composer-actions{
+    display:flex; justify-content:space-between;
+    margin-top:12px; padding-top:12px; border-top:1px solid var(--line);
+  }
+  .composer-action{
+    display:flex; align-items:center; gap:8px;
+    font-size:14px; font-weight:500; color:var(--muted);
+  }
+
+  /* Stories */
+  .stories{display:flex; gap:12px; overflow-x:auto; padding-bottom:4px;}
+  .story{
+    position:relative; flex-shrink:0;
+    height:160px; width:96px;
+    border-radius:12px; overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .story img{height:100%; width:100%; object-fit:cover;}
+  .story-shade{
+    position:absolute; inset:0;
+    background:linear-gradient(to top, rgba(43,29,25,0.75), transparent 55%);
+  }
+  .story-dot{
+    position:absolute; top:8px; left:8px;
+    height:24px; width:24px; border-radius:999px;
+    background:var(--brand); border:2px solid #fff;
+  }
+  .story-name{
+    position:absolute; bottom:6px; left:8px; right:8px;
+    font-size:11px; font-weight:500; color:#fff;
+  }
+
+  /* Post */
+  .post-head{
+    display:flex; align-items:flex-start; justify-content:space-between;
+    padding:16px 16px 0;
+  }
+  .post-user{display:flex; align-items:center; gap:12px;}
+  .post-name{font-size:14.5px; font-weight:600;}
+  .post-time{display:flex; align-items:center; gap:4px; font-size:12px; color:var(--muted);}
+  .post-text{padding:12px 16px 0; font-size:14.5px; line-height:1.6;}
+  .post-image{margin-top:12px; max-height:384px; width:100%; object-fit:cover;}
+  .post-stats{
+    display:flex; justify-content:space-between;
+    padding:8px 16px 0; font-size:12px; color:var(--muted);
+  }
+  .post-divider{margin:8px 16px; border-top:1px solid var(--line);}
+  .post-actions{display:flex; padding:0 8px 8px;}
+  .post-action{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:8px 0; border-radius:8px; font-size:14px; font-weight:500; color:var(--muted);
+  }
+  .post-action.liked{color:var(--brand);}
+
+  /* Right sidebar */
+  .side-title{display:flex; align-items:center; justify-content:between; padding:0 8px;}
+  .contacts-head{display:flex; align-items:center; justify-content:space-between; padding:0 8px;}
+  .contacts-head span:first-child{font-size:14px; font-weight:600;}
+  .contact-row{
+    display:flex; align-items:center; gap:12px;
+    padding:6px 8px; border-radius:8px; cursor:pointer;
+  }
+  .contact-row:hover{background:var(--tint);}
+  .contact-avatar{position:relative;}
+  .contact-avatar .dot-bg{height:32px; width:32px; border-radius:999px; background:var(--tint);}
+  .online-dot{
+    position:absolute; bottom:-2px; right:-2px;
+    height:10px; width:10px; border-radius:999px;
+    background:var(--green); border:2px solid #fff;
+  }
+  .contact-name{font-size:14px;}
+  .promo-card{
+    margin-top:20px; padding:12px; border-radius:12px; background:var(--tint);
+  }
+  .promo-title{font-size:13px; font-weight:600; color:var(--brand-deep);}
+  .promo-text{margin-top:4px; font-size:12.5px; line-height:1.5;}
+  .promo-btn{
+    margin-top:8px; padding:6px 12px; border-radius:999px;
+    background:var(--brand); color:#fff; font-size:12.5px; font-weight:600;
+  }
+
+  svg{stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+
+  @media (min-width:768px){
+    .menu-btn{display:none;}
+    .search{display:flex;}
+    .nav-icons{display:flex;}
+    .left-sidebar, .right-sidebar{display:block;}
+  }
+  @media (max-width:767px){
+    .menu-btn{display:block;}
+    .layout{grid-template-columns:1fr;}
+    .left-sidebar{display:none;}
+    .left-sidebar.open{display:block;}
+    .right-sidebar{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="logo">connectly</div>
+
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" style="color:#F2CFC9"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input placeholder="Search Connectly" />
+    </div>
+
+    <div class="nav-icons">
+      <div class="nav-icon active"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
+      <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>
+      <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 9l1-5h16l1 5"/><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="13" x2="15" y2="13"/></svg></div>
+    </div>
+
+    <div class="right-icons">
+      <button class="icon-circle"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+      <button class="icon-circle"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-9 8.5 8.5 8.5 0 1 1 9-8.5z"/></svg></button>
+      <img class="avatar-sm" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=60" alt="profile" />
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- Left sidebar -->
+  <div class="left-sidebar" id="leftSidebar">
+    <div class="profile-row">
+      <img class="avatar-sm" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=60" />
+      <div class="profile-name">Priya Nair</div>
+    </div>
+    <div class="side-links">
+      <div class="side-link">
+        <div class="side-icon"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+        <div><div class="side-label">Circles</div><div class="side-sub">12 active</div></div>
+      </div>
+      <div class="side-link">
+        <div class="side-icon"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="side-label">Saved</div>
+      </div>
+      <div class="side-link">
+        <div class="side-icon"><svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="side-label">Memories</div>
+      </div>
+      <div class="side-link">
+        <div class="side-icon"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M3 9l1-5h16l1 5"/><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+        <div class="side-label">Exchange</div>
+      </div>
+    </div>
+    <div class="side-section">
+      <div class="side-heading">Your circles</div>
+      <div style="margin-top:8px; display:flex; flex-direction:column; gap:4px;">
+        <div class="group-row"><div class="group-thumb"></div><div class="group-name">Riverside Runners</div></div>
+        <div class="group-row"><div class="group-thumb"></div><div class="group-name">Porch &amp; Garden</div></div>
+        <div class="group-row"><div class="group-thumb"></div><div class="group-name">Old City Chess</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Center feed -->
+  <div class="feed">
+    <div class="card composer">
+      <div class="composer-row">
+        <img class="avatar-md" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=60" />
+        <div class="composer-input">What's on your mind, Priya?</div>
+      </div>
+      <div class="composer-actions">
+        <div class="composer-action"><svg width="18" height="18" viewBox="0 0 24 24" style="color:var(--brand)"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> Live</div>
+        <div class="composer-action"><svg width="18" height="18" viewBox="0 0 24 24" style="color:var(--green)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Photo</div>
+        <div class="composer-action"><svg width="18" height="18" viewBox="0 0 24 24" style="color:var(--gold)"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Feeling</div>
+      </div>
+    </div>
+
+    <div class="stories" id="stories"></div>
+
+    <div id="posts"></div>
+  </div>
+
+  <!-- Right sidebar -->
+  <div class="right-sidebar">
+    <div class="contacts-head">
+      <span>Contacts</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" style="color:var(--muted)"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div id="contacts" style="margin-top:8px; display:flex; flex-direction:column; gap:4px;"></div>
+
+    <div class="promo-card">
+      <div class="promo-title">Bring back your circle</div>
+      <p class="promo-text">Three people from your old neighborhood joined Connectly this month.</p>
+      <button class="promo-btn">See who's here</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const stories = [
+    { name: "Mara Lindqvist", img: "https://images.unsplash.com/photo-1600180758890-6b94519a8ba6?w=300&q=60" },
+    { name: "Tomas Reyes", img: "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?w=300&q=60" },
+    { name: "Priya Nair", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=60" },
+    { name: "Community Garden", img: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=300&q=60" },
+    { name: "Jonah Reeve", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=60" },
+  ];
+
+  const posts = [
+    {
+      name: "Priya Nair", time: "2h",
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=60",
+      text: "Finally finished restoring the old porch swing my grandmother left us. Took three weekends and way too much sandpaper, but it creaks in exactly the right way now.",
+      image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=900&q=70",
+      likes: 214, comments: 38, shares: 6,
+    },
+    {
+      name: "Riverside Runners Club", time: "5h",
+      avatar: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=100&q=60",
+      text: "Saturday's 8am group run is moving to the north trailhead — the usual lot is closed for resurfacing. Bring water, it's supposed to be warm.",
+      image: null,
+      likes: 87, comments: 14, shares: 21,
+    },
+    {
+      name: "Tomas Reyes", time: "Yesterday",
+      avatar: "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?w=100&q=60",
+      text: "Nine years ago today I moved to this city knowing exactly one person. Grateful for everyone who's shown up since — you know who you are.",
+      image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=900&q=70",
+      likes: 502, comments: 96, shares: 12,
+    },
+  ];
+
+  const contacts = [
+    { name: "Elena Vasquez", online: true },
+    { name: "Marcus Webb", online: true },
+    { name: "Ada Solberg", online: false },
+    { name: "Dee Osei", online: true },
+    { name: "Sam Okafor", online: false },
+    { name: "Lily Chen", online: true },
+  ];
+
+  const storiesEl = document.getElementById("stories");
+  stories.forEach(s => {
+    storiesEl.innerHTML += `
+      <div class="story">
+        <img src="${s.img}" alt="" />
+        <div class="story-shade"></div>
+        <div class="story-dot"></div>
+        <div class="story-name">${s.name}</div>
+      </div>`;
+  });
+
+  const postsEl = document.getElementById("posts");
+  posts.forEach((p, i) => {
+    postsEl.innerHTML += `
+      <div class="card" style="margin-bottom:16px;">
+        <div class="post-head">
+          <div class="post-user">
+            <img class="avatar-md" src="${p.avatar}" />
+            <div>
+              <div class="post-name">${p.name}</div>
+              <div class="post-time"><svg width="11" height="11" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${p.time}</div>
+            </div>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 24 24" style="color:var(--muted)"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        </div>
+        <p class="post-text">${p.text}</p>
+        ${p.image ? `<img class="post-image" src="${p.image}" />` : ""}
+        <div class="post-stats">
+          <span class="like-count-${i}">${p.likes} likes</span>
+          <span>${p.comments} comments · ${p.shares} shares</span>
+        </div>
+        <div class="post-divider"></div>
+        <div class="post-actions">
+          <button class="post-action like-btn-${i}" onclick="toggleLike(${i}, ${p.likes})">
+            <svg width="17" height="17" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> Like
+          </button>
+          <button class="post-action">
+            <svg width="17" height="17" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Comment
+          </button>
+          <button class="post-action">
+            <svg width="17" height="17" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share
+          </button>
+        </div>
+      </div>`;
+  });
+
+  function toggleLike(i, base) {
+    const btn = document.querySelector(`.like-btn-${i}`);
+    const countEl = document.querySelector(`.like-count-${i}`);
+    const isLiked = btn.classList.toggle("liked");
+    const path = btn.querySelector("path");
+    path.setAttribute("fill", isLiked ? "var(--brand)" : "none");
+    countEl.textContent = `${isLiked ? base + 1 : base} likes`;
+  }
+
+  const contactsEl = document.getElementById("contacts");
+  contacts.forEach(c => {
+    contactsEl.innerHTML += `
+      <div class="contact-row">
+        <div class="contact-avatar">
+          <div class="dot-bg"></div>
+          ${c.online ? '<span class="online-dot"></span>' : ""}
+        </div>
+        <div class="contact-name">${c.name}</div>
+      </div>`;
+  });
+
+  document.getElementById("menuBtn").addEventListener("click", () => {
+    document.getElementById("leftSidebar").classList.toggle("open");
+  });
+</script>
+
+</body>
+</html>
